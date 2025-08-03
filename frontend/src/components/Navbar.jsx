@@ -12,7 +12,7 @@ export default function Navbar() {
   ];
 
   const [isVisible, setVisible] = useState(false);
-  const {setShowSearch} = useContext(ShopContext)
+  const {setShowSearch , getCartItemCount} = useContext(ShopContext)
 
   return (
     <div className="fixed top-0 left-0 w-full bg-white z-50">
@@ -72,7 +72,7 @@ export default function Navbar() {
               className="w-5 min-w-5 cursor-pointer"
             />
             <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
-              0
+              {getCartItemCount()}
             </p>
           </Link>
 

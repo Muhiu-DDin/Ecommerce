@@ -15,12 +15,9 @@ function Collection() {
 
 
   useEffect(()=>{
-    applyFilter()
-  }, [categories , subCategories , search , showSearch])
+     applyFilterAndSort()
+  }, [categories , subCategories , search , showSearch , sortType])
 
-  useEffect(()=>{
-      sortProduct()
-  } , [sortType])
 
   const toggleCategory = (e)=> {
     // switches the value in/out of the categories array. 
@@ -39,35 +36,36 @@ function Collection() {
        }
   }
 
-  const applyFilter = ()=>{
+
+  const applyFilterAndSort = ()=>{
+
     let productCopy = products.slice()
-    if(search && showSearch){
+    if(search &&  showSearch){
       productCopy = productCopy.filter((item)=>item.name.toLowerCase().includes(search.toLowerCase()))
     }
-    if(categories.length > 0){
+    if(categories.length > 0 ){
       productCopy = productCopy.filter((item)=>categories.includes(item.category))
     }
-    if(subCategories.length > 0){
+    if(subCategories.length > 0 ){
       productCopy = productCopy.filter((item)=>subCategories.includes(item.subCategory))
     }
-    setFilterProducts(productCopy)
-  }
 
-  const sortProduct = ()=>{
-      const filterProductCopy = filterProducts.slice()
-      switch(sortType){
-
+     switch(sortType){
+  
         case "low-high": 
-        setFilterProducts(filterProductCopy.sort((a , b)=>a.price - b.price))
+        productCopy.sort((a , b)=>a.price - b.price)
         break
 
         case "high-low":
-          setFilterProducts(filterProductCopy.sort((a , b)=>b.price - a.price))
+          productCopy.sort((a , b)=>b.price - a.price)
           break
 
         default :
           break
       }
+
+      setFilterProducts(productCopy)
+
   }
 
 
@@ -140,8 +138,6 @@ function Collection() {
               }
           </div>
       </div>
-
-
 
     </div>
   )
