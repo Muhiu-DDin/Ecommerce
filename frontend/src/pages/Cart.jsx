@@ -1,13 +1,14 @@
-import ProductItem from '@/components/ProductItem'
+import { assets } from '@/assets/frontend_assets/assets'
+import CartTotal from '@/components/CartTotal'
 import Title from '@/components/Title'
 import { ShopContext } from '@/context/ShopContext'
 import React, { useContext, useEffect, useState } from 'react'
 
 function Cart() {
-  const{products , cartItems} = useContext(ShopContext)
+  const{products , cartItems , currency , setCartItems , handleQuantityChange , navigate} = useContext(ShopContext)
   const [cartItemsData , setCartItemsData] = useState([])
 
-// cartItem structure
+// cartItem structure---------
 // {
 //   "aaaab": {
 //     "S": 2,
@@ -17,6 +18,20 @@ function Cart() {
 //     "L": 1
 //   }
 // }
+
+// cartItemsData structure---------
+// [
+//   {
+//     _id : "abcc",
+//     size : "M",
+//     quantity : 2
+//   } , 
+//   {
+//     _id : "abcc" ,
+//     size : "L",
+//     quantity : 4
+//   } , 
+// ]
 
 
   useEffect(
@@ -41,8 +56,9 @@ function Cart() {
   )
 
 
+  
   return (
-    <div className='border-t pt-12'>
+    <div className='border-t sm:pt-15 pt-20'>
         <div className='text-2xl mb-3'>
             <Title text1={"YOUR"} text2={"CART"}/>
         </div>
@@ -57,12 +73,47 @@ function Cart() {
                       <img src={data.image[0]} alt="" className='w-16 sm:w-20'/>
                       <div>
                         <p className='text-xs sm:text-lg font-medium'>{data.name}</p>
+                        <div className='flex items-center gap-5 mt-2'>
+                            <p>{currency}{data.price}</p>
+                            <p className='px-2 sm:px-3 sm:py-1 border bg-slate-50'>{item.size}</p>
+                        </div>
                       </div>
                     </div>
+
+                    <div className='flex items-center gap-2 border rounded px-2 py-1 max-w-fit'>
+                        <button 
+                          className='text-lg px-2 hover:text-red-500'
+                          onClick={() => handleQuantityChange(item._id, item.size, -1)}
+                        >−</button>
+                        <span className='min-w-[24px] text-center'>{item.quantity}</span>
+                        <button 
+                          className='text-lg px-2 hover:text-green-500'
+                          onClick={() => handleQuantityChange(item._id, item.size, 1)}
+                        >+</button>
+                    </div>
+
+                    <img onClick={
+                      ()=>{
+                      setCartItems((prev)=>{
+                         let updated = {...prev}
+                         delete updated[item._id][item.size]
+                         return updated
+                      })
+                      } }
+                     src={assets.bin_icon} alt="" className='w-4 mr-4  sm:w-5 cursor-pointer' />
                 </div>
-              )
+              ) 
             })
           }
+        </div>
+
+        <div className='flex justify-end my-20'>
+            <div className='w-full sm:w-[450px]'>
+                <CartTotal/>
+                <div className='w-full text-end'>
+                    <button onClick={()=>navigate("/PlaceOrder")}className='bg-black text-white text-sm my-8 px-8 py-3 cursor-pointer'>PROCEED TO CHECKOUT</button>
+                </div>
+            </div>
         </div>
     </div>
   )
