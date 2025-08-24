@@ -57,10 +57,13 @@ const ShopContextProvider = (props)=>{
         return count
     }
       const handleQuantityChange = (id , size , delta) => {
-      setCartItems((prev)=>{
+        setCartItems((prev)=>{
         let updated = {...prev}
         if(!updated[id] || updated[id][size] < 1) return prev
-        updated[id][size] += delta
+        if (delta > 0){
+            updated[id][size] += delta
+        }
+        if(delta < 0 && updated[id][size] > 1 ) updated[id][size] += delta
         return updated
       })
      }
