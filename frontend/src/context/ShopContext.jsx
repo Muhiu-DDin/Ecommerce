@@ -30,7 +30,7 @@ const ShopContextProvider = (props)=>{
             toast.error("please select the size")
             return
         }
-        // created deep copy so that original data does not alter 
+        // created deep copy (as there is nested object) so that original data does not alter 
         let cartItemCopy = structuredClone(cartItems)
         if(cartItemCopy[id]){
             if(cartItemCopy[id][size]){

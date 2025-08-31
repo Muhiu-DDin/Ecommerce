@@ -2,7 +2,6 @@ import express from 'express'
 import cors from "cors"
 import cookieParser from "cookie-parser";
 
-
 const app = express()
 
 // app.use(express.json()) is used to parse incoming JSON data (POST , PATCH) from the request body. It makes the data accessible via req.body in your route handlers.
@@ -13,7 +12,9 @@ app.use(cookieParser());
 
 
 import userRouter from './routes/userRoutes.js'
+import productRouter from './routes/productRoutes.js';
 
 app.use("/api/user" , userRouter)
+app.use("/api/product" , productRouter)
 
 export default app;

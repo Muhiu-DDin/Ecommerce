@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     password : {  type : String , required : true } ,
     email : { type : String ,  required : true } ,
     cartData : {type : Object , default : {}} ,
-    refreshToken : {type : String , default : ""}
+    refreshToken : {type : String , default : ""},
+    role: { type: String, enum: ["user", "admin"], default: "user" }
    
 } , {timestamps : true , minimize : false})
 
@@ -22,7 +23,11 @@ userSchema.pre("save" , async function (next){
 
 userSchema.methods.isPasswordCorrect = async function(password){
     // bcrypt.compare this return true or false
-    return await bcrypt.compare(password , this.password)
+    const result = await bcrypt.compare(password , this.password)
+    console.log("Entered:", password);
+    console.log("Stored (hash):", this.password);
+    console.log("Compare result:", result);
+    return result
 }
 
 userSchema.methods.generateAccessToken = async function (){
@@ -33,7 +38,8 @@ userSchema.methods.generateAccessToken = async function (){
         {
             _id:this._id,
             name:this.name,
-            email:this.email
+            email:this.email,
+            role : this.role
         },
         process.env.ACCESS_TOKEN_SECRET ,
         {

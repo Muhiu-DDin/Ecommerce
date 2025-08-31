@@ -1,6 +1,6 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { assets } from "../assets/frontend_assets/assets";
-import { createContext, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { ShopContext } from "@/context/ShopContext";
 
 export default function Navbar() {
@@ -13,6 +13,8 @@ export default function Navbar() {
 
   const [isVisible, setVisible] = useState(false);
   const {setShowSearch , getCartItemCount} = useContext(ShopContext)
+  const navigate = useNavigate();
+
 
   return (
     <div className="fixed top-0 left-0 w-full bg-white z-50">
@@ -44,10 +46,15 @@ export default function Navbar() {
 
         <div className="flex items-center gap-6">
           <img
-             onClick={()=>setShowSearch(true)}
+             onClick={()=>{ 
+              setShowSearch(true)
+              navigate("/collection");
+            }}
+              
             src={assets.search_icon}
             alt="search icon"
             className="w-5 cursor-pointer"
+
           />
 
           <div className="group relative">
@@ -82,7 +89,8 @@ export default function Navbar() {
             onClick={() => setVisible(true)}
             src={assets.menu_icon}
             alt="menu icon"
-            className="w-5 min-w-5 cursor-pointer sm:hidden"
+            className={`w-5 min-w-5 cursor-pointer sm:hidden`}
+
           />
         </div>
       </div>
