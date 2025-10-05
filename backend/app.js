@@ -7,7 +7,11 @@ const app = express()
 // app.use(express.json()) is used to parse incoming JSON data (POST , PATCH) from the request body. It makes the data accessible via req.body in your route handlers.
 
 app.use(express.json())
-app.use(cors())
+
+app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:5174"],
+  credentials: true,
+}));
 app.use(cookieParser());
 
 
