@@ -11,6 +11,7 @@ import { useAuth } from './context/authContext.jsx';
 import Login from './components/Login.jsx';
 
 export const BaseUrl = import.meta.env.VITE_BACKEND_URL
+export const currency = "$"
 
 const App = () => {
  const {user} =  useAuth()

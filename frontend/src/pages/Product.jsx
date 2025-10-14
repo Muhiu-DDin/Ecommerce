@@ -3,28 +3,56 @@ import Relatedproduct from '@/components/Relatedproduct'
 import { ShopContext } from '@/context/ShopContext'
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import axiosInstance from '@/utils/axiosInstance'
 
 function Product() {
   const {productId} = useParams()
-  const {products , currency , addToCart , cartItems} = useContext(ShopContext)
+  const {products , currency , addToCart} = useContext(ShopContext)
   const [productData , setProductData] = useState({})
   const [image , setImage] = useState([])
   const [size , setSize] = useState("")
 
-  useEffect(
-    ()=>{
-      fetchProduct()
-    } , [productId]
-  )
+//   useEffect(
+//     ()=>{
+//       fetchProduct()
+//     } , [productId]
+//   )
   
-  const fetchProduct = ()=>{
-    products.map((item)=>{
-      if(item._id === productId){
-        setProductData(item)
-        setImage(item.image?.[0]|| "")
+//   const fetchProduct = ()=>{
+//     products.map((item)=>{
+//       if(item._id === productId){
+//         setProductData(item)
+//         setImage(item.image?.[0]|| "")
+//       }
+//     }
+
+// )
+//   }
+
+useEffect(() => {
+  const fetchProduct = async () => {
+    const p = products.find(p => p._id === productId);
+    if (p) {
+      setProductData(p);
+      setImage(p.image?.[0]|| "")
+    } else {
+      try {
+        const res = await axiosInstance.get(`/product/single/${productId}`);
+        if (res.data.success) {
+          setProductData(res.data.product);
+          setImage(res.data.product.image?.[0] || ""); 
+        } 
+        
+      } catch (error) {
+        console.error("Error fetching product:", error);
       }
-  })
-  }
+    }
+  };
+
+  fetchProduct();
+}, [productId, products]);
+
+
 
 
   return productData ? (

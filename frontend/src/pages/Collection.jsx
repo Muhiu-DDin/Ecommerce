@@ -11,12 +11,11 @@ function Collection() {
   const [subCategories , setSubCategories] = useState([])
   const [sortType , setSortType] = useState("relevant")
 
-  const {search , showSearch , products} = useContext(ShopContext)
-
+  const {search , showSearch , products , getProductsData} = useContext(ShopContext)
 
   useEffect(()=>{
      applyFilterAndSort()
-  }, [categories , subCategories , search , showSearch , sortType])
+  }, [categories , subCategories , search , showSearch , sortType , products])
 
 
   const toggleCategory = (e)=> {
@@ -38,7 +37,7 @@ function Collection() {
 
 
   const applyFilterAndSort = ()=>{
-
+    // creates shallow copy 
     let productCopy = products.slice()
     if(search &&  showSearch){
       productCopy = productCopy.filter((item)=>item.name.toLowerCase().includes(search.toLowerCase()))
@@ -121,7 +120,7 @@ function Collection() {
       {/* right side  */}
       <div className='flex-1'>
 
-          <div className='flex justify-between text-base sm:text-2xl mb-4'>
+          <div className='flex justify-between text-base sm:text-2xl sm:h-10 mb-4'>
               <Title text1={"ALL"} text2={"COLLECTIONS"}/>
               <select onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 px-2 text-sm'>
                   <option value={"relevant"}>Sort by: Relevant</option>

@@ -4,7 +4,10 @@ import productModel from "../models/productModel.js"
 
 const addProduct = async (req , res)=>{
     try{
-        const {name , price , description , bestSeller , category , subCategory , sizes} = req.body
+        const {productName , price , description , bestSeller , category , subCategory , size} = req.body
+        console.log("req.body =>", req.body)
+        console.log("req.files =>", req.files)
+
 
         const image1 = req.files.image1 && req.files.image1[0]
         const image2 = req.files.image2 && req.files.image2[0]
@@ -24,19 +27,20 @@ const addProduct = async (req , res)=>{
         )
 
         const product = {
-            name , 
+            productName , 
             price : Number(price) ,
             description , 
             bestSeller : bestSeller === "true" ? true : false , 
             category , 
             subCategory ,
             image : images_url , 
-            sizes : JSON.parse(sizes) ,
+            size : JSON.parse(size) ,
             date : Date.now()
         }
+
         await productModel.create(product)
         
-        
+        // req.files (where files is an object) only exist when we uses multer 
         deleteUploadedFiles(req.files)
         
         return res.status(200).json({ success : true , message : "product added successfully"})

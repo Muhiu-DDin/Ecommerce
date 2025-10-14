@@ -2,6 +2,7 @@ import { useState , useRef} from "react";
 import { toast } from "react-toastify";
 import api from "../lib/axios"
 import { useAuth } from "../context/authContext";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
 
@@ -25,17 +26,16 @@ const Login = () => {
         setPassword("")
         console.log(response.data?.message)
       }else{
-        toast.error(response.data?.message);
+        toast.error("Login Failed!");
       }
     } catch (err) {
-      toast.error(err.message);
+       toast.error("Login Failed!");
       console.error("Error in admin login =>", err.message);
     }finally{
       setLoading(false)
     }
   };
 
-  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center">
@@ -66,11 +66,22 @@ const Login = () => {
             />
           </div>
 
-          <button className="mt-2 w-full py-2 px-4 rounded-md text-white bg-black cursor-pointer">
-            {
-              loading ? <p>loading...</p> : <p>Login</p>
-            }
-          </button>
+      <button
+          className="mt-2 w-full py-2 px-4 rounded-md text-white bg-black cursor-pointer flex justify-center items-center gap-2"
+          disabled={loading}
+      >
+          {loading ? (
+            <>
+              Please Wait
+              
+              <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+            
+            </>
+          ) : (
+            "Login"
+          )}
+      </button>
+
         </form>
       </div>
     </div>
