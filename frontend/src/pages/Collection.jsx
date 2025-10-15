@@ -90,7 +90,7 @@ function Collection() {
                 </p>
 
                 <p className='flex gap-2'>
-                  <input id="kid" type="checkbox" onChange={toggleCategory} className='w-3' value={"Kids"}/>
+                  <input id="kid" type="checkbox" onChange={toggleCategory} className='w-3' value={"Kid"}/>
                   <label htmlFor="kid" >Kid</label>
                 </p>
             </div>
@@ -122,7 +122,7 @@ function Collection() {
 
           <div className='flex justify-between text-base sm:text-2xl sm:h-10 mb-4'>
               <Title text1={"ALL"} text2={"COLLECTIONS"}/>
-              <select onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 px-2 text-sm'>
+              <select value={sortType} onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 px-2 text-sm'>
                   <option value={"relevant"}>Sort by: Relevant</option>
                   <option value={"low-high"}>Sort by: Low to High</option>
                   <option value={"high-low"}>Sort by: High to Low</option>
