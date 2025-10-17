@@ -2,6 +2,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { assets } from "../assets/frontend_assets/assets";
 import { useContext, useState } from "react";
 import { ShopContext } from "@/context/ShopContext";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default function Navbar() {
   const navLinks = [
@@ -12,18 +13,31 @@ export default function Navbar() {
   ];
 
   const [isVisible, setVisible] = useState(false);
-  const {setShowSearch , getCartItemCount} = useContext(ShopContext)
+  const { setShowSearch, getCartItemCount, user , setUser } = useContext(ShopContext);
   const navigate = useNavigate();
 
+  const logout = async ()=> {
+      try{
+         const res = await axiosInstance.post("/user/userLogout")
+         if(res.data?.message){
+            setUser(null)
+            console.log("user logout successfully")
+         }
+      }catch(error){
+        console.log("error in user logout =>", error)
+      }
+  }
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-white z-50">
+    <div className="fixed top-0 left-0 w-full bg-white z-50 shadow-sm">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
+        {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src={assets.logo} alt="Logo" className="w-36" />
         </Link>
 
-        <nav className="hidden sm:flex">
+        {/* Desktop Nav */}
+        <nav className="hidden sm:flex items-center gap-6">
           <ul className="flex space-x-6">
             {navLinks.map((link) => (
               <li key={link.name}>
@@ -42,38 +56,64 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
+
+  
         </nav>
 
+        {/* Right Section */}
         <div className="flex items-center gap-6">
+          
           <img
-             onClick={()=>{ 
-              setShowSearch(true)
+            onClick={() => {
+              setShowSearch(true);
               navigate("/collection");
             }}
-              
             src={assets.search_icon}
             alt="search icon"
             className="w-5 cursor-pointer"
-
           />
 
+
           <div className="group relative">
-            <Link to="/Login">
-              <img
-                src={assets.profile_icon}
-                alt="profile icon"
-                className="w-5 cursor-pointer"
-              />
-            </Link>
-            <div className="absolute right-0 pt-4 hidden group-hover:block z-50">
-              <div className="transition-all duration-300 flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow">
-                <p className="cursor-pointer hover:text-black">My Profile</p>
-                <p className="cursor-pointer hover:text-black">Orders</p>
-                <p className="cursor-pointer hover:text-black">Logout</p>
-              </div>
-            </div>
+            {user ? (
+              <>
+                <div className="flex items-center gap-2 cursor-pointer">
+                  <img
+                    src={assets.profile_icon}
+                    alt="profile icon"
+                    className="w-5"
+                  />
+                  <span className="font-semibold text-gray-700 hover:text-black transition">
+                    {user.name.length > 10 ? user.name.slice(0, 10) + "..." : user.name}
+                  </span>
+                  <img
+                    src={assets.dropdown_icon}
+                    alt="dropdown icon"
+                    className="w-3 transform rotate-90"
+                  />
+                </div>
+
+             
+                <div className="absolute right-0 pt-4 hidden group-hover:block z-50">
+                  <div className="transition-all duration-300 flex flex-col gap-2 w-40 py-3 px-5 bg-slate-100 text-gray-600 rounded shadow-md">
+                    <p className="cursor-pointer hover:text-black">My Profile</p>
+                    <p className="cursor-pointer hover:text-black">Orders</p>
+                    <p className="cursor-pointer hover:text-black" onClick={logout}>Logout</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <Link to="/login">
+                <img
+                  src={assets.profile_icon}
+                  alt="profile icon"
+                  className="w-5 cursor-pointer"
+                />
+              </Link>
+            )}
           </div>
 
+      
           <Link to="/cart" className="relative">
             <img
               src={assets.cart_icon}
@@ -89,13 +129,12 @@ export default function Navbar() {
             onClick={() => setVisible(true)}
             src={assets.menu_icon}
             alt="menu icon"
-            className={`w-5 min-w-5 cursor-pointer sm:hidden`}
-
+            className="w-5 min-w-5 cursor-pointer sm:hidden"
           />
         </div>
       </div>
 
-      {/* Mobile Nav Overlay */}
+      {/* Mobile Nav Overlay */} 
       <div
         className={`fixed top-0 right-0 h-full w-full bg-white transition-transform duration-300 z-50 ${
           isVisible ? "translate-x-0" : "translate-x-full"
@@ -124,6 +163,12 @@ export default function Navbar() {
               {link.name}
             </NavLink>
           ))}
+
+          {user && (
+            <div className="py-4 pl-6 border-b text-gray-700 font-semibold">
+              👤 {user.name}
+            </div>
+          )}
         </div>
       </div>
     </div>

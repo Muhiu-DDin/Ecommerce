@@ -9,12 +9,12 @@ export const AuthProvider = ({ children }) => {
 
   async function getUserData() {
   try {
-    const res = await api.get("/user/getUser");
+    const res = await api.get("/admin/getAdmin");
     setUser(res.data?.user);
     console.log("Fetched user:", res.data?.user);
   } catch (err) {
     if (err.response?.status !== 401) {
-      console.error("Error fetching user:", err);
+      console.error("Error fetching admin:", err);
     } else {
       console.log("User not logged in (no cookies yet)");
     }
@@ -30,7 +30,7 @@ useEffect(() => {
     try {
       await getUserData();
     } catch (err) {
-      console.log("User not logged in");
+      console.log("admin not logged in");
     } finally {
       setLoading(false);
     }

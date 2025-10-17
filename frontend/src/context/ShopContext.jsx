@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 // import {products} from "@/assets/frontend_assets/assets";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +11,14 @@ const ShopContextProvider = (props)=>{
     const currency = "$"
     const delivery_fee = 10
    const backendURL = import.meta.env.VITE_BACKEND_URL
+
     const [search , setSearch] = useState("")
     const [showSearch , setShowSearch] = useState(false)
     const [cartItems , setCartItems] = useState({})
-    const[products , setProducts] = useState([])
+    const [loading , setLoading] = useState(false)
+    const [user , setUser] = useState(null)
+    const [products , setProducts] = useState([])
+
     const navigate = useNavigate()
 
     // cartItem structure
@@ -27,6 +31,26 @@ const ShopContextProvider = (props)=>{
     //     "L": 1
     //   }
     // }
+
+    async function getUserData() {
+        setLoading(true)
+        try {
+            // this ensure that the user is login and have valid tokens as this route alse have middleware attached 
+            const res = await axiosInstance.get("/user/getUser");
+            setUser(res.data?.user);
+            console.log("Fetched user:", res.data?.user);
+        } catch (err) {
+            if (err.response?.status !== 401) {
+            console.error("Error fetching user:", err);
+            } else {
+            console.log("User not logged in (no cookies yet)");
+            }
+            setUser(null);
+        } finally {
+            setLoading(false);
+        }
+    }
+    
 
     const getProductsData = async ()=>{
         try{
@@ -41,9 +65,24 @@ const ShopContextProvider = (props)=>{
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+            await getUserData();
+            } catch (err) {
+            console.log("User not logged in");
+            } finally {
+            setLoading(false);
+            }
+        };
+        fetchUser();
         getProductsData()
-    } , [])
+    }, []);
+
+
+    // useEffect(()=>{
+    //     getProductsData()
+    // } , [])
 
     const addToCart = (id , size)=>{
         if(!size){
@@ -76,7 +115,8 @@ const ShopContextProvider = (props)=>{
         }
         return count
     }
-      const handleQuantityChange = (id , size , delta) => {
+
+    const handleQuantityChange = (id , size , delta) => {
         setCartItems((prev)=>{
         let updated = {...prev}
         if(!updated[id] || updated[id][size] < 1) return prev
@@ -88,7 +128,7 @@ const ShopContextProvider = (props)=>{
       })
      }
 
-     const getCartAmount = ()=>{
+    const getCartAmount = ()=>{
         let totalAmount = 0
         if(cartItems){
             for (let id in cartItems){
@@ -104,7 +144,7 @@ const ShopContextProvider = (props)=>{
 
     const value = {
         products , currency , backendURL , delivery_fee , search , setSearch , showSearch , setShowSearch , addToCart , cartItems , getCartItemCount , 
-        setCartItems , handleQuantityChange , getCartAmount , navigate , getProductsData
+        setCartItems , handleQuantityChange , getCartAmount , navigate , getProductsData , user , getUserData , setUser
     }
 
     return(
@@ -115,5 +155,7 @@ const ShopContextProvider = (props)=>{
     
     )
 }
+
+export const useFrontendAuth = ()=> useContext(ShopContext)
 
 export default ShopContextProvider

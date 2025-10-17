@@ -8,11 +8,11 @@ const Navbar = () => {
 
   const logoutFunc = async ()=>{
       try{  
-        const res = await api.post("/user/logout")
+        const res = await api.post("/admin/logout")
         setUser(null)
         console.log("response of getUser" , res.data?.message)
       }catch(error){
-        console.log("Error in logout", error)
+        console.log("Error in admin logout", error)
       }
   }
 

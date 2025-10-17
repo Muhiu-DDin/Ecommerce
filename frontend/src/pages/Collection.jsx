@@ -11,7 +11,7 @@ function Collection() {
   const [subCategories , setSubCategories] = useState([])
   const [sortType , setSortType] = useState("relevant")
 
-  const {search , showSearch , products , getProductsData} = useContext(ShopContext)
+  const {search , showSearch , products } = useContext(ShopContext)
 
   useEffect(()=>{
      applyFilterAndSort()
@@ -40,7 +40,7 @@ function Collection() {
     // creates shallow copy 
     let productCopy = products.slice()
     if(search &&  showSearch){
-      productCopy = productCopy.filter((item)=>item.name.toLowerCase().includes(search.toLowerCase()))
+      productCopy = productCopy.filter((item)=>item.productName.toLowerCase().includes(search.toLowerCase()))
     }
     if(categories.length > 0 ){
       productCopy = productCopy.filter((item)=>categories.includes(item.category))
@@ -132,7 +132,7 @@ function Collection() {
           <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
               {
                 filterProducts.map((item , index)=>(
-                  <ProductItem key={index} image={item.image} name={item.name} id={item._id} price={item.price}/>
+                  <ProductItem key={index} image={item.image} productName={item.productName} id={item._id} price={item.price}/>
                 ))
               }
           </div>

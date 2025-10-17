@@ -6,6 +6,7 @@ const addProduct = async (req , res)=>{
     try{
         const {productName , price , description , bestSeller , category , subCategory , size} = req.body
         console.log("req.body =>", req.body)
+        
         console.log("req.files =>", req.files)
 
 

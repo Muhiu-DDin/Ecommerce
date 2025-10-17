@@ -16,7 +16,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true)
-      const response = await api.post("/user/admin",
+      const response = await api.post("/admin/login",
       { email, password } , { withCredentials: true } );
 
       if(response.data?.success){
