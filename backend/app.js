@@ -20,7 +20,7 @@ import productRouter from './routes/productRoutes.js';
 import adminRouter from './routes/adminRoutes.js';
 
 app.use("/api/user" , userRouter)
-app.use("/api/product" , productRouter)
+app.use("/api/admin/product" , productRouter)
 app.use("/api/admin" , adminRouter)
 
 export default app;

@@ -37,7 +37,6 @@ const adminCookieOptions = {
 //     throw e;
 //   }
 // };
-
 // export const userLogin = async (req, res) => {
 //   try {
 //     const { email , password} = req.body;
@@ -69,8 +68,6 @@ const adminCookieOptions = {
 //     return res.status(500).json({ success: false, message: "Server error" });
 //   }
 // };
-
-
 // export const userRegister = async (req, res) => {
 //   try {
 //     const usernameRegex = /^[A-Za-z0-9-]+$/;
@@ -126,7 +123,6 @@ const adminCookieOptions = {
 //     return res.status(400).json({ success: false, message: "Error in logout" });
 //   }
 // };
-
 // export const refreshAccessToken = async (req, res) => {
 //   const refreshToken = req?.cookies?.refreshToken;
 //   if (!refreshToken)
@@ -153,9 +149,7 @@ const adminCookieOptions = {
 //     console.error("Error in refreshAccessToken:", error.message);
 //     return res.status(500).json({ success: false, message: "Error refreshing token" });
 //   }
-// };
-
-
+// }
 // export const adminLogin = async (req, res) => {
 //   try {
 //     const { email, password } = req.body;

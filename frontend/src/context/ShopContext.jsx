@@ -54,7 +54,7 @@ const ShopContextProvider = (props)=>{
 
     const getProductsData = async ()=>{
         try{
-            const res = await axiosInstance.get("/product/list")
+            const res = await axiosInstance.get("/admin/product/list")
             if(res.data?.success){
                 setProducts(res.data?.products)
             }else{

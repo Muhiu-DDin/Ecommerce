@@ -71,11 +71,15 @@ export const userVerify = async (req, res, next) => {
   try {
     const token = req.cookies?.userAccessToken;
     if (!token) return res.status(401).json({ message: "No user token" });
+
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_USER);
+
     const user = await userModel.findById(decoded._id);
+
     if (!user) return res.status(401).json({ message: "Invalid user" });
     req.user = user;
     next();
+    
   } catch {
     return res.status(401).json({ message: "Invalid or expired user token" });
   }

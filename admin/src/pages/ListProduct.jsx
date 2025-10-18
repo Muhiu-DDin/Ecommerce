@@ -10,7 +10,7 @@ const ListProduct = () => {
 
   const listProduct = async () => {
     try {
-      const res = await api.get("/product/list");
+      const res = await api.get("/admin/product/list");
       if (res.data?.success) {
         setListItems(res.data?.products);
         console.log("products=>" , res.data?.products)
@@ -25,7 +25,7 @@ const ListProduct = () => {
 
   const removeProduct = async(id)=>{
     try{
-      const res = await api.delete(`/product/remove/${id}`)
+      const res = await api.delete(`/admin/product/remove/${id}`)
       if(res.data?.success){
         toast.success(res.data?.message)
         listProduct()

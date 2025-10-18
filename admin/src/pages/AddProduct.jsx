@@ -39,7 +39,7 @@ const AddProduct = () => {
           image3 && formData.append("image3" , image3)
           image4 && formData.append("image4" , image4)
 
-          const res = await api.post("/product/add" , formData)
+          const res = await api.post("/admin/product/add" , formData)
           console.log("response of AddProduct =>" , res.data?.message)
 
           if(res.data?.success){

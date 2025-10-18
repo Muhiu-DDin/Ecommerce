@@ -17,16 +17,29 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        await api.post("/user/refreshToken");
-        return api(originalRequest);
-      } catch (refreshError) {
-        console.warn("Refresh token failed — logging out");
-        return Promise.reject(refreshError);
-      }
-    }
+    // if (error.response?.status === 401 && !originalRequest._retry) {
+    //   originalRequest._retry = true;
+    //   try {
+    //     await api.post("/admin/refreshToken");
+    //     return api(originalRequest);
+    //   } catch (refreshError) {
+    //     console.warn("Refresh token failed — logging out");
+    //     return Promise.reject(refreshError);
+    //   }
+    // }
+
+  if (error.response?.status === 401 && !originalRequest._retry) {
+  originalRequest._retry = true;
+  
+  if (originalRequest.url.includes("/user")) {
+    await api.post("/user/refreshToken");
+  } else if (originalRequest.url.includes("/admin")) {
+    await api.post("/admin/refreshToken");
+  }
+  
+  return api(originalRequest);
+  }
+
 
     return Promise.reject(error);
   }
