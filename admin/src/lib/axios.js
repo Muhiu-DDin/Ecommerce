@@ -16,18 +16,7 @@ api.interceptors.response.use(
     if (originalRequest.url.includes("/user/refreshToken")) {
       return Promise.reject(error);
     }
-
-    // if (error.response?.status === 401 && !originalRequest._retry) {
-    //   originalRequest._retry = true;
-    //   try {
-    //     await api.post("/admin/refreshToken");
-    //     return api(originalRequest);
-    //   } catch (refreshError) {
-    //     console.warn("Refresh token failed — logging out");
-    //     return Promise.reject(refreshError);
-    //   }
-    // }
-
+    
   if (error.response?.status === 401 && !originalRequest._retry) {
   originalRequest._retry = true;
   

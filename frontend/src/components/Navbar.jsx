@@ -97,7 +97,7 @@ export default function Navbar() {
                 <div className="absolute right-0 pt-4 hidden group-hover:block z-50">
                   <div className="transition-all duration-300 flex flex-col gap-2 w-40 py-3 px-5 bg-slate-100 text-gray-600 rounded shadow-md">
                     <p className="cursor-pointer hover:text-black">My Profile</p>
-                    <p className="cursor-pointer hover:text-black">Orders</p>
+                    <p onClick={()=>navigate("/order")} className="cursor-pointer hover:text-black">Orders</p>
                     <p className="cursor-pointer hover:text-black" onClick={logout}>Logout</p>
                   </div>
                 </div>

@@ -2,11 +2,14 @@ import { assets } from '@/assets/frontend_assets/assets'
 import CartTotal from '@/components/CartTotal'
 import Title from '@/components/Title'
 import { ShopContext } from '@/context/ShopContext'
+import axiosInstance from '@/utils/axiosInstance'
 import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Cart() {
-  const{products , cartItems , currency , setCartItems , handleQuantityChange , navigate} = useContext(ShopContext)
+  const{products , cartItems , currency , setCartItems , handleQuantityChange  , user} = useContext(ShopContext)
   const [cartItemsData , setCartItemsData] = useState([])
+  const navigate = useNavigate()
 
 // cartItem structure---------
 // {
@@ -50,6 +53,7 @@ function Cart() {
           }
         }
       }
+
       setCartItemsData(temp)
 
     }, [cartItems]
@@ -70,7 +74,7 @@ function Cart() {
               return(
                 <div key={index} className='py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4'>
                     <div className='flex items-start gap-6'>
-                      <img src={data.image[0]} alt="" className='w-16 sm:w-20'/>
+                      <img onClick={()=>navigate(`/product/${data._id}`)} src={data.image[0]} alt="" className='w-16 cursor-pointer sm:w-20'/>
                       <div>
                         <p className='text-xs sm:text-lg font-medium'>{data.name}</p>
                         <div className='flex items-center gap-5 mt-2'>
@@ -93,13 +97,16 @@ function Cart() {
                     </div>
 
                     <img onClick={
-                      ()=>{
-                      setCartItems((prev)=>{
+                      async ()=>{
+                         setCartItems((prev)=>{
                          let updated = {...prev}
                          delete updated[item._id][item.size]
                          return updated
-                      })
-                      } }
+                         })
+                        const res = await axiosInstance.post("/cart/delete" , {userId : user._id , itemId : item._id , size : item.size })
+                        if(res.data?.success) console.log("item updated")
+                      }  
+                    }
                      src={assets.bin_icon} alt="" className='w-4 mr-4  sm:w-5 cursor-pointer' />
                 </div>
               ) 

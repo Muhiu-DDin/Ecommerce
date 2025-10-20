@@ -1,12 +1,6 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 
-// export const adminMiddleware = (req , res , next) => {
-
-//     if(!req.admin) return res.status(403).json({ success: false, message: "Admins only" });    
-//     next()
-
-// }
 
 export const adminVerify = async (req, res, next) => {
   try {

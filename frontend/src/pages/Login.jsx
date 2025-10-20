@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import axiosInstance from "@/utils/axiosInstance";
 import { toast } from "react-toastify";
 import { useFrontendAuth } from "@/context/ShopContext";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [currentState, setCurrentState] = useState("SignUp");
@@ -10,6 +11,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const { setUser, getUserData , user} = useFrontendAuth();
 
@@ -22,6 +24,7 @@ function Login() {
       setPassword("");
       setName("");
       toast.success(res.data?.message || "Success");
+      navigate("/")
     } else {
       toast.error(res.data?.message || "Unexpected error");
       setUser(null);

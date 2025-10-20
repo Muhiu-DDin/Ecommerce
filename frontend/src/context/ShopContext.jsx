@@ -3,6 +3,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "@/utils/axiosInstance";
+
+
  
 export const ShopContext = createContext()
 
@@ -65,6 +67,18 @@ const ShopContextProvider = (props)=>{
         }
     }
 
+    const getCartItemsData = async () => {
+        try{
+        const res = await axiosInstance.post("/cart/get" , {userId : user._id})
+        if(res.data?.success){
+            setCartItems(res.data?.cartData)
+        }
+        }catch(error){
+            console.log("error in getCartItemsData" , error)
+        }
+    }
+
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -79,12 +93,14 @@ const ShopContextProvider = (props)=>{
         getProductsData()
     }, []);
 
+    useEffect(() => {
+        if (user?._id) {
+            getCartItemsData();
+        }
+    }, [user]);
 
-    // useEffect(()=>{
-    //     getProductsData()
-    // } , [])
 
-    const addToCart = (id , size)=>{
+    const addToCart = async (id , size)=>{
         if(!size){
             toast.error("please select the size")
             return
@@ -97,11 +113,23 @@ const ShopContextProvider = (props)=>{
             }else{
              cartItemCopy[id][size] = 1
         }
-        }else{
+        }else{ 
+        // we have to first initialize an empty object for nested structure if id key is not exist 
             cartItemCopy[id] = {};
             cartItemCopy[id][size] = 1
         }
         setCartItems(cartItemCopy)
+        if(user){
+            try{
+                await axiosInstance.post("/cart/add" , {userId : user._id , itemId : id , size})
+                console.log("item added to db")
+            }catch(error){
+                console.log("error in addToCart" , error.message)
+            }
+        }else{
+            console.log("user =>" , user)
+            console.log("user not define")
+        }
         toast.success("item added successfully")
     }
 
@@ -116,7 +144,8 @@ const ShopContextProvider = (props)=>{
         return count
     }
 
-    const handleQuantityChange = (id , size , delta) => {
+    const handleQuantityChange = async (id , size , delta) => {
+         let updatedCart;
         setCartItems((prev)=>{
         let updated = {...prev}
         if(!updated[id] || updated[id][size] < 1) return prev
@@ -124,8 +153,18 @@ const ShopContextProvider = (props)=>{
             updated[id][size] += delta
         }
         if(delta < 0 && updated[id][size] > 1 ) updated[id][size] += delta
+        updatedCart = updated
         return updated
       })
+        if(user){
+            try{
+               const res = await axiosInstance.post("/cart/update" , {userId : user._id , itemId : id , size , quantity : updatedCart[id][size] })
+               if(res.data.success) console.log("quantity changed successfully")
+            }catch(error){
+                console.log("error in handleQuantityChange" , error)
+            }
+        }
+
      }
 
     const getCartAmount = ()=>{

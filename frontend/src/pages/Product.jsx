@@ -12,22 +12,6 @@ function Product() {
   const [image , setImage] = useState([])
   const [size , setSize] = useState("")
 
-//   useEffect(
-//     ()=>{
-//       fetchProduct()
-//     } , [productId]
-//   )
-  
-//   const fetchProduct = ()=>{
-//     products.map((item)=>{
-//       if(item._id === productId){
-//         setProductData(item)
-//         setImage(item.image?.[0]|| "")
-//       }
-//     }
-
-// )
-//   }
 
 useEffect(() => {
   const fetchProduct = async () => {
@@ -37,10 +21,9 @@ useEffect(() => {
       setImage(p.image?.[0]|| "")
     } else {
       try {
-        const res = await axiosInstance.get(`/product/single/${productId}`);
+        const res = await axiosInstance.get(`/admin/product/single/${productId}`);
         if (res.data.success) {
           setProductData(res.data.product);
-          console.log("selected product =>" , res.data.product)
           setImage(res.data.product.image?.[0] || ""); 
         } 
         

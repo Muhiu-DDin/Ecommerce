@@ -18,7 +18,7 @@ import { ToastContainer } from 'react-toastify';
 function App() {
   return (
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] '>
-       <ScrollToTop />
+      <ScrollToTop />
       <ToastContainer position="bottom-right" autoClose={3000} />
       <Navbar/>
       <Search/>

@@ -19,7 +19,7 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await axiosInstance.post("/user/refreshUserToken");
+        await axiosInstance.post("/user/refreshToken");
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         console.warn("Refresh token failed — logging out");
