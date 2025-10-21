@@ -6,6 +6,7 @@ import { useFrontendAuth } from '@/context/ShopContext'
 import axiosInstance from '@/utils/axiosInstance'
 import { useNavigate } from 'react-router-dom'
 import { Loader2 } from "lucide-react";
+import { toast } from 'react-toastify'
 
 function PlaceOrder() {
   const [method, setMethod] = useState("COD")
@@ -78,6 +79,15 @@ function PlaceOrder() {
                 console.log("error while placing order" , res.data?.message)
             }
             break ;
+
+            case("stripe"):
+              const stripeRes = await axiosInstance.post("/order/stripe" , orderData )
+              if(stripeRes.data?.success){
+                  window.location.replace(stripeRes.data?.session_url)
+              }else{
+                toast.error(stripeRes.data?.message)
+              }
+              break;
           default :
             break ;
         }
@@ -229,7 +239,7 @@ function PlaceOrder() {
             <img src={assets.stripe_logo} alt="" className="mx-5 h-4" />
           </div>
 
-          <div
+          {/* <div
             onClick={() => setMethod("razorpay")}
             className="flex items-center gap-3 border p-2 px-3 cursor-pointer"
           >
@@ -239,7 +249,7 @@ function PlaceOrder() {
               }`}
             ></p>
             <img src={assets.razorpay_logo} alt="" className="mx-5 h-4" />
-          </div>
+          </div> */}
 
           <div
             onClick={() => setMethod("COD")}

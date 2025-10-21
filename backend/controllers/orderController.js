@@ -1,5 +1,13 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
+import Stripe from "stripe"
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+const currency = "PKR"
+const deliveryCharge = 10
 
 const placeOrderOnCOD = async (req, res) => {
   try {
@@ -26,13 +34,80 @@ const placeOrderOnCOD = async (req, res) => {
 };
 
 
-const placeOrderOnRazorPay = async (req , res) =>{
+const placeOrderOnStripe = async (req, res) => {
+  try {
+    const { userId, items, address, amount } = req.body;
+    const { origin } = req.headers;
 
-}
+    const orderObject = {
+      userId,
+      items,
+      address,
+      amount,
+      payment: false,
+      paymentMethod: "Stripe",
+    };
 
-const placeOrderOnStripe = async (req , res) =>{
+    const newOrder = await orderModel.create(orderObject);
 
-}
+    const line_items = items.map((item) => ({
+      price_data: {
+        currency: currency,
+        product_data: {
+          name: item.productName,
+        },
+        unit_amount: item.price * 100,
+      },
+      quantity: item.quantity,
+    }));
+
+    // Add delivery charge as separate item
+    line_items.push({
+      price_data: {
+        currency: currency,
+        product_data: {
+          name: "Delivery Charges",
+        },
+        unit_amount: deliveryCharge * 100,
+      },
+      quantity: 1,
+    });
+
+    
+    const session = await stripe.checkout.sessions.create({
+      success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`,
+      cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,
+      line_items, 
+      mode: "payment",
+    });
+
+    return res.json({ success: true, session_url: session.url });
+  } catch (error) {
+    console.log("error in placeOrderOnStripe", error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+const verifyStripe = async (req, res) => {
+  try {
+    let { userId, orderId, success } = req.body;
+    success = success === "true"; // string to boolean
+
+    if (success) {
+      await orderModel.findByIdAndUpdate(orderId, { payment: true });
+      await userModel.findByIdAndUpdate(userId, { cartData: {} });
+      res.json({ success: true, message: "Payment verified!" });
+    } else {
+      await orderModel.findByIdAndDelete(orderId);
+      res.json({ success: false, message: "Unable to verify payment" });
+    }
+  } catch (error) {
+    console.log("error in verifyStripe", error);
+    res.json({ success: false, message: "Error in payment verification" });
+  }
+};
+
+
 
 // orders to show on frontend 
 const allUserOrders = async (req, res) => {
@@ -79,8 +154,15 @@ const allAdminOrders = async (req , res) =>{
 
 // updating status ,  for admin 
 const updateStatus = async (req , res) =>{
-
+    try{
+        const {orderId , status} = req.body
+        const response = await orderModel.findByIdAndUpdate(orderId , {status})
+        return res.json({success : true , message : "status updated successfully"})
+    }catch(error){
+      console.log("error in updateStatus" , error)
+       return res.json({success : false , message : "error in updating status"})
+    }
 }
 
-export {placeOrderOnCOD , placeOrderOnRazorPay , placeOrderOnStripe , allAdminOrders , allUserOrders , updateStatus}
+export {placeOrderOnCOD  , placeOrderOnStripe , allAdminOrders , allUserOrders , updateStatus , verifyStripe}
 

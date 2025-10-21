@@ -4,7 +4,7 @@ import userModel from "../models/userModel.js";
 
 export const adminVerify = async (req, res, next) => {
   try {
-    const token = req.cookies?.adminAccessToken;
+    const token = req.cookies?.adminAccessToken || req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "No admin token" });
 
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_ADMIN);
