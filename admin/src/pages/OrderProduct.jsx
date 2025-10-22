@@ -44,7 +44,7 @@ const OrderProduct = () => {
     <div className="p-6">
       <h3 className="text-2xl font-semibold mb-6">Order Page</h3>
 
-      {orders.map((order, index) => (
+      {orders.length > 0 ? orders.map((order, index) => (
         <div
           key={index}
           className="grid grid-cols-1 md:grid-cols-[0.6fr_2fr_1fr_1fr_1fr] gap-4 border border-gray-300 py-10 rounded-xl p-6 mb-6 shadow-sm text-sm text-gray-800"
@@ -103,7 +103,12 @@ const OrderProduct = () => {
             </select>
           </div>
         </div>
-      ))}
+      )) :
+        (
+          <div className="flex justify-center items-center text-lg ">
+          No Orders Yet</div>
+        )
+        }
     </div>
   );
 };
