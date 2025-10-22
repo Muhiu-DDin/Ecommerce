@@ -4,11 +4,14 @@ import jwt from "jsonwebtoken";
 
 const isProduction = process.env.NODE_ENV === "production";
 
+// This cookie will be sent automatically for every request whose URL starts with / (for users) and /api/admin (for admin) , avoiding overlaps ok cookies for user and admin” 
+
 const userCookieOptions = {
   httpOnly: true,
   secure: isProduction,
   sameSite: isProduction ? "none" : "lax", 
-   path: "/", 
+  path: "/", 
+  maxAge: 30 * 24 * 60 * 60 * 1000, 
   // domain: "localhost",
 };
 
