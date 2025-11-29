@@ -1,7 +1,12 @@
 import axios from "axios";
 
+// const api = axios.create({
+//   baseURL: "http://localhost:4000/api",
+//   withCredentials: true,
+// });
+
 const api = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: "https://foreverbackend-k8zm.onrender.com/api",
   withCredentials: true,
 });
 

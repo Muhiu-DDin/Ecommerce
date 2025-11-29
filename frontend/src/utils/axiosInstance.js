@@ -1,9 +1,15 @@
 import axios from "axios";
 
+// const axiosInstance = axios.create({
+//   baseURL: "http://localhost:4000/api",
+//   withCredentials: true,
+// });
+
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: "https://foreverbackend-k8zm.onrender.com/api",
   withCredentials: true,
 });
+
 
 axiosInstance.interceptors.response.use(
   (response) => response,

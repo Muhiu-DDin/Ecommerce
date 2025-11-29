@@ -12,7 +12,7 @@ const userCookieOptions = {
   sameSite: isProduction ? "none" : "lax", 
   path: "/", 
   maxAge: 30 * 24 * 60 * 60 * 1000, 
-  // domain: "localhost",
+ 
 };
 
 const adminCookieOptions = {
@@ -20,7 +20,6 @@ const adminCookieOptions = {
   secure: isProduction,
   sameSite: isProduction ? "none" : "lax", 
    path: "/api/admin", 
-  // domain: "localhost",
 };
 
 export const refreshAccessToken = async (req, res) => {
