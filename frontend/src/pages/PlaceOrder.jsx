@@ -88,6 +88,7 @@ function PlaceOrder() {
 
             case("stripe"):
               const stripeRes = await axiosInstance.post("/order/stripe" , orderData )
+              // it is the success of the request to create a Stripe session, not the success of the payment itself.
               if(stripeRes.data?.success){
                   window.location.replace(stripeRes.data?.session_url)
               }else{
