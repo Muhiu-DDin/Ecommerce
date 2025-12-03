@@ -34,6 +34,12 @@ function PlaceOrder() {
     e.preventDefault()
     setLoading(true)
     try{
+
+      if (!user){
+        toast("please login before placing order")
+        navigate("/login");
+      }
+
         let orderItems = [] 
 
         for(let id in cartItems){
