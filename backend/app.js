@@ -15,7 +15,7 @@ app.use(express.json())
 // app.use(cookieParser());
 
 app.use(cors({
-  origin: ["https://worldwideforever.vercel.app", "https://foreveradminpannel.vercel.app"],
+  origin: ["https://forevermart.vercel.app", "https://foreveradminpannel.vercel.app"],
   credentials: true,
 }));
 app.use(cookieParser());
