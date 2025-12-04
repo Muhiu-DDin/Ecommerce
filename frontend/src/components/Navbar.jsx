@@ -84,7 +84,7 @@ export default function Navbar() {
                     className="w-5"
                   />
                   <span className="font-semibold text-gray-700 hover:text-black transition">
-                    {user.name.length > 10 ? user.name.slice(0, 4) + "..." : user.name}
+                    {user.name.length > 5 ? user.name.slice(0, 4) + "..." : user.name}
                   </span>
                   <img
                     src={assets.dropdown_icon}
