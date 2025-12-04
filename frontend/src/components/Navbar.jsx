@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { assets } from "../assets/frontend_assets/assets";
-import { useContext, useState } from "react";
+import { useContext, useState , useRef, useEffect } from "react";
 import { ShopContext } from "@/context/ShopContext";
 import axiosInstance from "@/utils/axiosInstance";
 
@@ -15,6 +15,11 @@ export default function Navbar() {
   const [isVisible, setVisible] = useState(false);
   const { setShowSearch, getCartItemCount, user , setUser } = useContext(ShopContext);
   const navigate = useNavigate();
+  const [isOpen , setIsOpen] = useState(false)
+
+  const dropdownRef = useRef(null)
+  const profileRef = useRef(null)
+
 
   const logout = async ()=> {
       try{
@@ -27,6 +32,26 @@ export default function Navbar() {
         console.log("error in user logout =>", error)
       }
   }
+
+    useEffect(() => {
+      
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(event.target) && 
+        !profileRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+
 
   return (
     <div className="fixed top-0 left-0 w-full bg-white z-50 shadow-sm">
@@ -77,7 +102,7 @@ export default function Navbar() {
           <div className="group relative">
             {user ? (
               <>
-                <div className="flex items-center gap-2 cursor-pointer">
+                <div ref={profileRef} className="flex items-center gap-2 cursor-pointer">
                   <img
                     src={assets.profile_icon}
                     alt="profile icon"
@@ -87,20 +112,25 @@ export default function Navbar() {
                     {user.name.length > 5 ? user.name.slice(0, 4) + "..." : user.name}
                   </span>
                   <img
+                    onClick={()=>setIsOpen((prev)=>!prev)}
                     src={assets.dropdown_icon}
                     alt="dropdown icon"
                     className="w-3 transform rotate-90"
                   />
                 </div>
 
-             
-                <div className="absolute right-0 pt-4 hidden group-hover:block z-50">
+              {
+                isOpen && (
+                 <div ref={dropdownRef} className="absolute right-0 pt-4 z-50">
                   <div className="transition-all duration-300 flex flex-col gap-2 w-40 py-3 px-5 bg-slate-100 text-gray-600 rounded shadow-md">
                     <p className="cursor-pointer hover:text-black">My Profile</p>
                     <p onClick={()=>navigate("/order")} className="cursor-pointer hover:text-black">Orders</p>
                     <p className="cursor-pointer hover:text-black" onClick={logout}>Logout</p>
                   </div>
                 </div>
+                )
+              }
+            
               </>
             ) : (
               <Link to="/login">
