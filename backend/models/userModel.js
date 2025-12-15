@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken";
+
 
 const userSchema = new mongoose.Schema({
     name : {type : String , required : true } , 
@@ -27,36 +27,6 @@ userSchema.methods.isPasswordCorrect = async function(password){
     return result
 }
 
-// userSchema.methods.generateAccessToken = async function (){
-
-//     // The decodedToken in auth-middleware will be an object containing the payload data (that we are passing below)
-
-//    return jwt.sign(
-//         {
-//             _id:this._id,
-//             name:this.name,
-//             email:this.email,
-//             role : this.role
-//         },
-//         process.env.ACCESS_TOKEN_SECRET ,
-//         {
-//             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
-//         }
-//     )
-// }
-
-// userSchema.methods.generateRefreshToken = async function (){
-   
-//    return jwt.sign(
-//         {
-//             _id:this._id
-//         },
-//         process.env.REFRESH_TOKEN_SECRET,
-//         {
-//             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
-//         }
-//     )
-// }
 
 
 
